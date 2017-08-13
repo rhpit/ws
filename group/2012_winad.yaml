@@ -1,0 +1,58 @@
+# Provision a Windows server and configure Active Directory group
+
+group:
+  - header:
+    name: Windows Server 2012 Active Directory group
+    description: Provision and configure Windows vm with Active Directory
+    maintainer: eduardomcerqueira@gmail.com
+
+  - vars:
+    credentials: credentials.yaml
+    topology: resources.yaml
+
+  - tasks:
+    - name: Provision Windows
+      task: provision
+
+    - name: Windows preparation
+      task: winsetup
+      args:
+        - powershell: powershell/2012_ad_preparation.ps1
+        - powershell_vars: powershell/my_vars.json
+
+    - name: Reboot
+      task: winsetup
+      args:
+        - powershell: powershell/reboot.ps1
+
+    - name: Allow Windows to come back online
+      task: wait
+      duration: 30
+
+    - name: Windows setup step 1
+      task: winsetup
+      args:
+        - powershell: powershell/2012_ad_setup_step1.ps1
+        - powershell_vars: powershell/my_vars.json
+
+    - name: Allow Windows to come back online
+      task: wait
+      duration: 30
+
+    - name: Windows setup step 2
+      task: winsetup
+      args:
+        - powershell: powershell/2012_ad_setup_step2.ps1
+        - powershell_vars: powershell/my_vars.json
+
+    - name: Reboot
+      task: winsetup
+      args:
+        - powershell: powershell/reboot.ps1
+
+    - name: Allow Windows to come back online
+      task: wait
+      duration: 30
+
+    - name: show Windows info
+      task: show

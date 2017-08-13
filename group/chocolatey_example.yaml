@@ -1,0 +1,46 @@
+group:
+  - header:
+    name: Chocolatey group example
+    description: "
+      Paws group to demonstrate how users can use chocolatey Powershell
+      script to install, upgrade and uninstall packages. This group will
+      provision a new Windows system, install chocolatey, perform the
+      available chocolatey.ps1 commands and then teardown the Windows system"
+    maintainer: rwilliams5262@gmail.com
+
+  - vars:
+    credentials: credentials.yaml
+    topology: resources.yaml
+
+  - tasks:
+    - name: Provision Windows
+      task: provision
+
+    - name: Install chocolatey (package manager for Windows)
+      task: winsetup
+      args:
+        - powershell: powershell/install_chocolatey.ps1
+
+    - name: Install packages using chocolatey
+      task: winsetup
+      args:
+        - powershell: powershell/chocolatey.ps1
+        - powershell_vars: "-command install -packages @('python2', 'pip')"
+
+    - name: Upgrade packages using chocolatey
+      task: winsetup
+      args:
+        - powershell: powershell/chocolatey.ps1
+        - powershell_vars: "-command upgrade -packages @('python2', 'pip')"
+
+    - name: Uninstall packages using chocolatey
+      task: winsetup
+      args:
+        - powershell: powershell/chocolatey.ps1
+        - powershell_vars: "-command uninstall -packages @('python2', 'pip')"
+
+    - name: show Windows info
+      task: show
+
+    - name: Teardown Windows
+      task: teardown

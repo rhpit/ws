@@ -1,0 +1,116 @@
+group:
+  - header:
+    name: Windows Apache Tomcat version 9
+    description: "
+      Provision Windows based on your resources.yaml file configure this host
+      to run Apache Tomcat WebService installing all software needed for it.
+      "
+    maintainer: eduardomcerqueira@gmail.com
+
+  - vars:
+    credentials: credentials.yaml
+    topology: resources.yaml
+
+  - tasks:
+    - name: Provision Windows
+      task: provision
+
+    - name: Allow Windows to warm-up
+      task: wait
+      duration: 30
+
+    - name: show Windows info
+      task: show
+
+    - name: Install chocolatey (package manager for Windows)
+      task: winsetup
+      args:
+        - powershell: powershell/install_chocolatey.ps1
+
+    - name: Install util software
+      task: winsetup
+      args:
+        - powershell: powershell/chocolatey.ps1
+        - powershell_vars: "-command install -packages @('7zip', 'git', 'nssm', 'wget', 'curl')"
+
+    - name: Install JDK8
+      task: winsetup
+      args:
+        - powershell: powershell/chocolatey.ps1
+        - powershell_vars: "-command install -packages @('jdk8 --version 8.0.131')"
+
+    - name: Install JRE8
+      task: winsetup
+      args:
+        - powershell: powershell/chocolatey.ps1
+        - powershell_vars: "-command install -packages @('jre8 --version 8.0.131')"
+
+    - name: Set environment variables JAVA_HOME and JRE_HOME
+      task: winsetup
+      args:
+        - powershell: powershell/set_env_var.ps1
+        - powershell_vars: "
+            -vars @{'JAVA_HOME' = 'C:\\Program Files\\Java\\jdk1.8.0_131'; 'JRE_HOME' = 'C:\\Program Files\\Java\\jre1.8.0_131'}
+            "
+
+    - name: Download Apache Tomcat from Official website
+      task: winsetup
+      args:
+        - powershell: powershell/cmd.ps1
+        - powershell_vars: "
+            -chdir 'C:\\Users\\Administrator\\Downloads' \
+            -cmd 'wget http://apache.ip-guide.com/tomcat/tomcat-9/v9.0.0.M21/bin/apache-tomcat-9.0.0.M21-windows-x64.zip'
+            "
+
+    - name: List files in Downloads
+      task: winsetup
+      args:
+        - powershell: powershell/cmd.ps1
+        - powershell_vars: "
+            -chdir 'C:\\Users\\Administrator\\Downloads' \
+            -cmd 'dir'
+            "
+
+    - name: Unzip Apache Tomcat
+      task: winsetup
+      args:
+        - powershell: powershell/cmd.ps1
+        - powershell_vars: "
+            -chdir 'C:\\Users\\Administrator\\Downloads' \
+            -cmd '7z x -y apache-tomcat-9.0.0.M21-windows-x64.zip'
+            "
+
+    - name: Add Apache Tomcat daemon
+      task: winsetup
+      args:
+        - powershell: powershell/cmd.ps1
+        - powershell_vars: "
+            -chdir 'C:\\Users\\Administrator\\Downloads\\apache-tomcat-9.0.0.M21\\bin' \
+            -cmd 'service.bat install tomcat9'
+            "
+
+    - name: Start Apache Tomcat service
+      task: winsetup
+      args:
+        - powershell: powershell/nssm_manage.ps1
+        - powershell_vars: "-action start -service_name tomcat9"
+
+    - name: Check Process
+      task: winsetup
+      args:
+        - powershell: powershell/cmd.ps1
+        - powershell_vars: "
+            -cmd 'tasklist'
+            "
+
+    - name: Curl http://localhost:8080
+      task: winsetup
+      args:
+        - powershell: powershell/cmd.ps1
+        - powershell_vars: "
+            -cmd 'curl http://localhost:8080'
+            "
+
+    - name: show Windows info
+      task: show
+

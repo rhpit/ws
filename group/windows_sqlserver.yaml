@@ -1,0 +1,58 @@
+group:
+  - header:
+    name: MS SQL Server 2014 Express with SP2 12.2.5000.20160811
+    description: "
+      Provision Windows based on your resources.yaml file configure this host
+      to run MS SQL Database server installing all software needed for it.
+      "
+    maintainer: eduardomcerqueira@gmail.com
+
+  - vars:
+    credentials: credentials.yaml
+    topology: resources.yaml
+
+  - tasks:
+    - name: Provision Windows
+      task: provision
+
+    - name: Allow Windows to warm-up
+      task: wait
+      duration: 30
+
+    - name: show Windows info
+      task: show
+
+    - name: Install chocolatey (package manager for Windows)
+      task: winsetup
+      args:
+        - powershell: powershell/install_chocolatey.ps1
+
+    - name: Install util software
+      task: winsetup
+      args:
+        - powershell: powershell/chocolatey.ps1
+        - powershell_vars: "-command install -packages @('7zip', 'nssm', 'wget', 'curl')"
+
+    - name: Install MYSQL server
+      task: winsetup
+      args:
+        - powershell: powershell/chocolatey.ps1
+        - powershell_vars: "-command install -packages @('mssqlserver2014express')"
+
+    - name: Start Mysql service
+      task: winsetup
+      args:
+        - powershell: powershell/nssm_manage.ps1
+        - powershell_vars: "-action status -service_name MSSQL$SQLEXPRESS"
+
+    - name: Check Process
+      task: winsetup
+      args:
+        - powershell: powershell/cmd.ps1
+        - powershell_vars: "
+            -cmd 'tasklist'
+            "
+
+    - name: show Windows info
+      task: show
+

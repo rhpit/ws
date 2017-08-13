@@ -1,0 +1,91 @@
+# Provision Windows Server 2012/2016 and configure with Active Directory
+# This assumes inside your resources.yaml two resource elements are given
+# 1. windows2012 & 2. windows2016
+
+group:
+  - header:
+    name: Create two Windows Active Directory servers (2012/2016)
+    description: Configure Windows 2012/2016 servers with Active Directory
+    maintainer: eduardomcerqueira@gmail.com
+
+  - vars:
+    credentials: credentials.yaml
+    topology: resources.yaml
+
+  - tasks:
+    - name: Provision Windows servers 2012/2016
+      task: provision
+
+    - name: Windows preparation 2012
+      task: winsetup
+      args:
+        - powershell: powershell/2012_ad_preparation.ps1
+        - powershell_vars: powershell/my_vars.json
+        - system:
+          - windows2012
+
+    - name: Windows preparation 2016
+      task: winsetup
+      args:
+        - powershell: powershell/2016_ad_preparation.ps1
+        - powershell_vars: powershell/my_vars.json
+        - system:
+          - windows2016
+
+    - name: Reboot
+      task: winsetup
+      args:
+        - powershell: powershell/reboot.ps1
+
+    - name: Allow Windows to come back online
+      task: wait
+      duration: 30
+
+    - name: Windows setup step 1 2012
+      task: winsetup
+      args:
+        - powershell: powershell/2012_ad_setup_step1.ps1
+        - powershell_vars: powershell/my_vars.json
+        - system:
+          - windows2012
+
+    - name: Windows setup step 1 2016
+      task: winsetup
+      args:
+        - powershell: powershell/2016_ad_setup_step1.ps1
+        - powershell_vars: powershell/my_vars.json
+        - system:
+          - windows2016
+
+    # Revist this to handle checking to see if systems are up
+    - name: Delay to wait for gpsvc Group Policy Client loading 2016
+      task: wait
+      duration: 600
+
+    - name: Windows setup step 2 2012
+      task: winsetup
+      args:
+        - powershell: powershell/2012_ad_setup_step2.ps1
+        - powershell_vars: powershell/my_vars.json
+        - system:
+          - windows2012
+
+    - name: Windows setup step 2 2016
+      task: winsetup
+      args:
+        - powershell: powershell/2016_ad_setup_step2.ps1
+        - powershell_vars: powershell/my_vars.json
+        - system:
+          - windows2016
+
+    - name: Reboot
+      task: winsetup
+      args:
+        - powershell: powershell/reboot.ps1
+
+    - name: Allow Windows to come back online
+      task: wait
+      duration: 30
+
+    - name: show Windows info
+      task: show

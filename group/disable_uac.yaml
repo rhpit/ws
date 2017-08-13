@@ -1,0 +1,31 @@
+# Provision a Windows system and disable UAC (User Access Control)
+# The Windows system provisioned is defined within your system resource
+# topology file (resources.yaml).
+
+group:
+  - header:
+    name: Disable UAC
+    description: Disable UAC on a new Windows system
+    maintainer: rwilliams5262@gmail.com
+
+  - vars:
+    credentials: credentials.yaml
+    topology: resources.yaml
+
+  - tasks:
+    - name: Provision Windows
+      task: provision
+
+    - name: Disable UAC
+      task: winsetup
+      args:
+        - powershell: powershell/set_uac.ps1
+        - powershell_vars: "-uacValue 0"
+
+    - name: Reboot Windows for UAC changes to take effect
+      task: winsetup
+      args:
+        - powershell: powershell/reboot.ps1
+
+    - name: show Windows info
+      task: show

@@ -1,0 +1,76 @@
+group:
+  - header:
+    name: Windows Jenkins Slave
+    description: "
+      Provision and configure a Windows host to be a Jenkins Slave, install
+      all needed software and connect to a specified Jenkins Master
+      with authentication, check parameters
+      "
+    maintainer: eduardomcerqueira@gmail.com
+
+  - vars:
+    credentials: credentials.yaml
+    topology: resources.yaml
+
+  - tasks:
+    - name: Provision Windows
+      task: provision
+
+    - name: Allow Windows to warm-up
+      task: wait
+      duration: 30
+
+    - name: show Windows
+      task: show
+
+    - name: Install chocolatey (package manager for Windows)
+      task: winsetup
+      args:
+        - powershell: powershell/install_chocolatey.ps1
+
+    - name: Install packages using chocolatey
+      task: winsetup
+      args:
+        - powershell: powershell/chocolatey.ps1
+        - powershell_vars: "-command install -packages @('jre8', 'javaruntime', '7zip', 'git', 'nssm', 'wget')"
+
+    - name: Running pre-configuration and downloading Jenkins swarm-client
+      task: winsetup
+      args:
+        - powershell: powershell/jslave_get_swarm_client.ps1
+        - powershell_vars: "-swarm_client_url https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.0/swarm-client-2.0-jar-with-dependencies.jar \
+            -swarm_client_name swarm-client-2.0-jar-with-dependencies.jar \
+            -fsroot_path C:\\Users\\Administrator\\Desktop\\jenkins"
+
+    # substitue variables below to your environment
+    # password is user token
+    - name: Creating MS Service to manage Jenkins Slave
+      task: winsetup
+      args:
+        - powershell: powershell/jslave_add_service.ps1
+        - powershell_vars: "-service_name Jenkins-slave \
+            -swarm_client_path C:\\Users\\Administrator\\Downloads\\swarm-client-2.0-jar-with-dependencies.jar \
+            -master_url https://my-jenkins-url.com \
+            -fsroot C:\\Users\\Administrator\\jenkins \
+            -jslave_name jslave_windows-2012R2 \
+            -jslave_label jslave_windows-2012R2 \
+            -disableSSL 1 \
+            -executors 1 \
+            -mode exclusive \
+            -username my-jenkins-user \
+            -password 123123123123123123123123123123"
+
+    - name: Start Jenkins Slave swarm-client
+      task: winsetup
+      args:
+        - powershell: powershell/nssm_manage.ps1
+        - powershell_vars: "-action start -service_name Jenkins-slave"
+
+    - name: Check Status of Jenkins Slave
+      task: winsetup
+      args:
+        - powershell: powershell/nssm_manage.ps1
+        - powershell_vars: "-action status -service_name Jenkins-slave"
+
+    - name: show Windows
+      task: show

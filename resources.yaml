@@ -1,0 +1,13 @@
+# Topology info to be provisioned by PAWS 
+# https://rhpit.github.io/paws/files.html#resources-yaml
+
+resources:
+- name: 
+  provider: 
+  count: 
+  image: 
+  flavor: 
+  network: 
+  keypair: 
+  ssh_private_key: 
+  administrator_password: 
