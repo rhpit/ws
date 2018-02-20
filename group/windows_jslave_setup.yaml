@@ -1,3 +1,12 @@
+# Paws group to configure Windows vm as a Jenkins slave and connect to master
+# Before running, you need to replace the following powershell variables
+# values.
+#    * -master_url (Jenkins master url)
+#    * -username (Username to connect Jenkins slave to master via swarm client)
+#    * -password (Password to connect Jenkins slave to master via swarm client)
+# If these values are not changed, your Windows will not connect successfully
+# to your Jenkins master.
+
 group:
   - header:
     name: Windows Jenkins Slave
@@ -42,8 +51,9 @@ group:
             -swarm_client_name swarm-client-2.0-jar-with-dependencies.jar \
             -fsroot_path C:\\Users\\Administrator\\Desktop\\jenkins"
 
-    # substitue variables below to your environment
-    # password is user token
+    # substitute powershell variables below to fit your Jenkins environment
+    # password is your jenkins user token
+    # usually you will need to use the administrator account
     - name: Creating MS Service to manage Jenkins Slave
       task: winsetup
       args:
