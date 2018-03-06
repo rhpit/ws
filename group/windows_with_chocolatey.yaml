@@ -1,0 +1,24 @@
+group:
+  - header:
+      name: Windows with chocolatey package manager
+      description: |
+        Provision a Windows virtual machine and install chocolatey package
+        manager. This provides a Windows virtual machine ready to install
+        packages for test automation.
+      maintainer: paws@paws.com
+
+  - vars:
+      credentials: credentials.yaml
+      topology: resources.yaml
+
+  - tasks:
+      - name: Provision Windows virtual machine
+        task: provision
+
+      - name: Install chocolatey package manager
+        task: winsetup
+        args:
+          - powershell: powershell/install_chocolatey.ps1
+
+      - name: Show Windows virtual machine details
+        task: show
