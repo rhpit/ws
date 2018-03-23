@@ -40,7 +40,11 @@ param(`
     [Parameter(Mandatory=$False)][array]$levels
 )
 
-Clear-Host
+try {
+    Clear-Host
+} catch {
+    Write-Host "No text to remove from current display."
+}
 
 $scriptName = $MyInvocation.MyCommand.Name
 $log = "$(get-date) - $scriptName"

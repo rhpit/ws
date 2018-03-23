@@ -19,7 +19,11 @@ Windows Server 2012 R2
 Ryan Williams <rwilliams5262@gmail.com>
 #>
 
-Clear-Host
+try {
+    Clear-Host
+} catch {
+    Write-Host "No text to remove from current display."
+}
 
 $scriptName = $MyInvocation.MyCommand.Name
 $log = "$(get-date) - $scriptName"

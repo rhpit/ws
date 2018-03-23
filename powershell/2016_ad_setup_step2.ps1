@@ -25,7 +25,12 @@ win-2016-serverstandard-x86_64-latest-pretest
 
 Import-Module ServerManager -passthru
 
-Clear-Host
+try {
+    Clear-Host
+} catch {
+    Write-Host "No text to remove from current display."
+}
+
 Remove-Variable -Name * -Force -ErrorAction SilentlyContinue
 
 $scriptName = $MyInvocation.MyCommand.Name
