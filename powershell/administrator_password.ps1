@@ -19,7 +19,12 @@ Windows 2012 R2
     Eduardo Cerqueira, eduardomcerqueira@gmail.com
 #>
 
-﻿Clear-Host
+try {
+    Clear-Host
+} catch {
+    Write-Host "No text to remove from current display."
+}
+
 Remove-Variable -Name * -Force -ErrorAction SilentlyContinue
 
 $scriptName = $MyInvocation.MyCommand.Name
