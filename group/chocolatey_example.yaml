@@ -17,27 +17,27 @@ group:
       task: provision
 
     - name: Install chocolatey (package manager for Windows)
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/install_chocolatey.ps1
+        - script: powershell/install_chocolatey.ps1
 
     - name: Install packages using chocolatey
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/chocolatey.ps1
-        - powershell_vars: "-command install -packages @('python2', 'pip')"
+        - script: powershell/chocolatey.ps1
+        - script_vars: "-command install -packages @('python2', 'pip')"
 
     - name: Upgrade packages using chocolatey
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/chocolatey.ps1
-        - powershell_vars: "-command upgrade -packages @('python2', 'pip')"
+        - script: powershell/chocolatey.ps1
+        - script_vars: "-command upgrade -packages @('python2', 'pip')"
 
     - name: Uninstall packages using chocolatey
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/chocolatey.ps1
-        - powershell_vars: "-command uninstall -packages @('python2', 'pip')"
+        - script: powershell/chocolatey.ps1
+        - script_vars: "-command uninstall -packages @('python2', 'pip')"
 
     - name: show Windows info
       task: show

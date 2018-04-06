@@ -16,9 +16,9 @@ group:
         task: provision
 
       - name: Install chocolatey package manager
-        task: winsetup
+        task: configure
         args:
-          - powershell: powershell/install_chocolatey.ps1
+          - script: powershell/install_chocolatey.ps1
 
       - name: Show Windows virtual machine details
         task: show

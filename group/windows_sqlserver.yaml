@@ -23,33 +23,33 @@ group:
       task: show
 
     - name: Install chocolatey (package manager for Windows)
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/install_chocolatey.ps1
+        - script: powershell/install_chocolatey.ps1
 
     - name: Install util software
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/chocolatey.ps1
-        - powershell_vars: "-command install -packages @('7zip', 'nssm', 'wget', 'curl')"
+        - script: powershell/chocolatey.ps1
+        - script_vars: "-command install -packages @('7zip', 'nssm', 'wget', 'curl')"
 
     - name: Install MYSQL server
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/chocolatey.ps1
-        - powershell_vars: "-command install -packages @('mssqlserver2014express')"
+        - script: powershell/chocolatey.ps1
+        - script_vars: "-command install -packages @('mssqlserver2014express')"
 
     - name: Start Mysql service
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/nssm_manage.ps1
-        - powershell_vars: "-action status -service_name MSSQL$SQLEXPRESS"
+        - script: powershell/nssm_manage.ps1
+        - script_vars: "-action status -service_name MSSQL$SQLEXPRESS"
 
     - name: Check Process
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/cmd.ps1
-        - powershell_vars: "
+        - script: powershell/cmd.ps1
+        - script_vars: "
             -cmd 'tasklist'
             "
 

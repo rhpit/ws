@@ -15,40 +15,40 @@ group:
       task: provision
 
     - name: Windows preparation
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/2016_ad_preparation.ps1
-        - powershell_vars: powershell/my_vars.json
+        - script: powershell/2016_ad_preparation.ps1
+        - script_vars: powershell/my_vars.json
 
     - name: Reboot
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/reboot.ps1
+        - script: powershell/reboot.ps1
 
     - name: Allow Windows to come back online
       task: wait
       duration: 30
 
     - name: Windows setup step 1
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/2016_ad_setup_step1.ps1
-        - powershell_vars: powershell/my_vars.json
+        - script: powershell/2016_ad_setup_step1.ps1
+        - script_vars: powershell/my_vars.json
 
     - name: Delay to wait for gpsvc Group Policy Client loading
       task: wait
       duration: 600
 
     - name: Windows setup step 2
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/2016_ad_setup_step2.ps1
-        - powershell_vars: powershell/my_vars.json
+        - script: powershell/2016_ad_setup_step2.ps1
+        - script_vars: powershell/my_vars.json
 
     - name: Reboot
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/reboot.ps1
+        - script: powershell/reboot.ps1
 
     - name: Allow Windows to come back online
       task: wait

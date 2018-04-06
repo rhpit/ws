@@ -33,21 +33,21 @@ group:
       task: show
 
     - name: Install chocolatey (package manager for Windows)
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/install_chocolatey.ps1
+        - script: powershell/install_chocolatey.ps1
 
     - name: Install packages using chocolatey
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/chocolatey.ps1
-        - powershell_vars: "-command install -packages @('jre8', 'javaruntime', '7zip', 'git', 'nssm', 'wget')"
+        - script: powershell/chocolatey.ps1
+        - script_vars: "-command install -packages @('jre8', 'javaruntime', '7zip', 'git', 'nssm', 'wget')"
 
     - name: Running pre-configuration and downloading Jenkins swarm-client
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/jslave_get_swarm_client.ps1
-        - powershell_vars: "-swarm_client_url https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.0/swarm-client-2.0-jar-with-dependencies.jar \
+        - script: powershell/jslave_get_swarm_client.ps1
+        - script_vars: "-swarm_client_url https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.0/swarm-client-2.0-jar-with-dependencies.jar \
             -swarm_client_name swarm-client-2.0-jar-with-dependencies.jar \
             -fsroot_path C:\\Users\\Administrator\\Desktop\\jenkins"
 
@@ -55,10 +55,10 @@ group:
     # password is your jenkins user token
     # usually you will need to use the administrator account
     - name: Creating MS Service to manage Jenkins Slave
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/jslave_add_service.ps1
-        - powershell_vars: "-service_name Jenkins-slave \
+        - script: powershell/jslave_add_service.ps1
+        - script_vars: "-service_name Jenkins-slave \
             -swarm_client_path C:\\Users\\Administrator\\Downloads\\swarm-client-2.0-jar-with-dependencies.jar \
             -master_url https://my-jenkins-url.com \
             -fsroot C:\\Users\\Administrator\\jenkins \
@@ -71,16 +71,16 @@ group:
             -password 123123123123123123123123123123"
 
     - name: Start Jenkins Slave swarm-client
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/nssm_manage.ps1
-        - powershell_vars: "-action start -service_name Jenkins-slave"
+        - script: powershell/nssm_manage.ps1
+        - script_vars: "-action start -service_name Jenkins-slave"
 
     - name: Check Status of Jenkins Slave
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/nssm_manage.ps1
-        - powershell_vars: "-action status -service_name Jenkins-slave"
+        - script: powershell/nssm_manage.ps1
+        - script_vars: "-action status -service_name Jenkins-slave"
 
     - name: show Windows
       task: show

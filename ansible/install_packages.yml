@@ -1,0 +1,17 @@
+---
+
+- name: Install packages using chocolatey
+  hosts: "{{ hosts }}"
+
+  tasks:
+    - name: Install packages
+      win_chocolatey:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "{{ packages }}"
+      register: package_install
+
+    - name: Install packages output
+      debug:
+        var: package_install
