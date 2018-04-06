@@ -1,0 +1,32 @@
+group:
+  - header:
+    name: Chocolatey ansible group example
+    description: "
+      Paws group to demonstrate how users can use ansible install_packages.yml
+      playbook to install packages using ansible win_chocolatey module. This
+      group will provision a new Windows system, install packages from both
+      a variable file and string input and then finally teardown the system."
+    maintainer: rwilliams5262@gmail.com
+
+  - vars:
+    credentials: credentials.yaml
+    topology: resources.yaml
+
+  - tasks:
+      - name: Install packages as file input
+        task: configure
+        args:
+          - script: ansible/install_packages.yml
+          - script_vars: ansible/install_packages.json
+
+      - name: Install packages as string input
+        task: configure
+        args:
+          - script: ansible/install_packages.yml
+          - script_vars: "{'packages': ['git', 'python']}"
+
+      - name: Show Windows information
+        task: show
+
+      - name: Teardown Windows
+        task: teardown

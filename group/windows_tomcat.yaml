@@ -23,91 +23,91 @@ group:
       task: show
 
     - name: Install chocolatey (package manager for Windows)
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/install_chocolatey.ps1
+        - script: powershell/install_chocolatey.ps1
 
     - name: Install util software
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/chocolatey.ps1
-        - powershell_vars: "-command install -packages @('7zip', 'git', 'nssm', 'wget', 'curl')"
+        - script: powershell/chocolatey.ps1
+        - script_vars: "-command install -packages @('7zip', 'git', 'nssm', 'wget', 'curl')"
 
     - name: Install JDK8
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/chocolatey.ps1
-        - powershell_vars: "-command install -packages @('jdk8 --version 8.0.131')"
+        - script: powershell/chocolatey.ps1
+        - script_vars: "-command install -packages @('jdk8 --version 8.0.131')"
 
     - name: Install JRE8
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/chocolatey.ps1
-        - powershell_vars: "-command install -packages @('jre8 --version 8.0.131')"
+        - script: powershell/chocolatey.ps1
+        - script_vars: "-command install -packages @('jre8 --version 8.0.131')"
 
     - name: Set environment variables JAVA_HOME and JRE_HOME
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/set_env_var.ps1
-        - powershell_vars: "
+        - script: powershell/set_env_var.ps1
+        - script_vars: "
             -vars @{'JAVA_HOME' = 'C:\\Program Files\\Java\\jdk1.8.0_131'; 'JRE_HOME' = 'C:\\Program Files\\Java\\jre1.8.0_131'}
             "
 
     - name: Download Apache Tomcat from Official website
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/cmd.ps1
-        - powershell_vars: "
+        - script: powershell/cmd.ps1
+        - script_vars: "
             -chdir 'C:\\Users\\Administrator\\Downloads' \
             -cmd 'wget http://apache.ip-guide.com/tomcat/tomcat-9/v9.0.0.M21/bin/apache-tomcat-9.0.0.M21-windows-x64.zip'
             "
 
     - name: List files in Downloads
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/cmd.ps1
-        - powershell_vars: "
+        - script: powershell/cmd.ps1
+        - script_vars: "
             -chdir 'C:\\Users\\Administrator\\Downloads' \
             -cmd 'dir'
             "
 
     - name: Unzip Apache Tomcat
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/cmd.ps1
-        - powershell_vars: "
+        - script: powershell/cmd.ps1
+        - script_vars: "
             -chdir 'C:\\Users\\Administrator\\Downloads' \
             -cmd '7z x -y apache-tomcat-9.0.0.M21-windows-x64.zip'
             "
 
     - name: Add Apache Tomcat daemon
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/cmd.ps1
-        - powershell_vars: "
+        - script: powershell/cmd.ps1
+        - script_vars: "
             -chdir 'C:\\Users\\Administrator\\Downloads\\apache-tomcat-9.0.0.M21\\bin' \
             -cmd 'service.bat install tomcat9'
             "
 
     - name: Start Apache Tomcat service
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/nssm_manage.ps1
-        - powershell_vars: "-action start -service_name tomcat9"
+        - script: powershell/nssm_manage.ps1
+        - script_vars: "-action start -service_name tomcat9"
 
     - name: Check Process
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/cmd.ps1
-        - powershell_vars: "
+        - script: powershell/cmd.ps1
+        - script_vars: "
             -cmd 'tasklist'
             "
 
     - name: Curl http://localhost:8080
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/cmd.ps1
-        - powershell_vars: "
+        - script: powershell/cmd.ps1
+        - script_vars: "
             -cmd 'curl http://localhost:8080'
             "
 

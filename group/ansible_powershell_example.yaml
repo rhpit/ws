@@ -1,0 +1,40 @@
+---
+group:
+  - header:
+    name: Example showing Ansible playbook and Windows PowerShell scripts
+    description: "
+      Paws group to demonstrate how users can call both Ansible playbooks and
+      Windows PowerShell scripts to configure Windows services on their
+      systems."
+    maintainer: rwilliams5262@gmail.com
+
+  - vars:
+    credentials: credentials.yaml
+    topology: resources.yaml
+
+  - tasks:
+      - name: Provision Windows
+        task: provision
+
+      - name: Install chocolatey package manager
+        task: configure
+        args:
+          - script: powershell/install_chocolatey.ps1
+
+      - name: Install packages by ansible
+        task: configure
+        args:
+          - script: ansible/install_packages.yml
+          - script_vars: "{'packages': ['python2']}"
+
+      - name: Upgrade packages by powershell
+        task: configure
+        args:
+          - script: powershell/chocolatey.ps1
+          - script_vars: "-command upgrade -packages @('python2')"
+
+      - name: Show Windows information
+        task: show
+
+      - name: Teardown Windows
+        task: teardown

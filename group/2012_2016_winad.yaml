@@ -17,43 +17,43 @@ group:
       task: provision
 
     - name: Windows preparation 2012
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/2012_ad_preparation.ps1
-        - powershell_vars: powershell/my_vars.json
+        - script: powershell/2012_ad_preparation.ps1
+        - script_vars: powershell/my_vars.json
         - system:
           - windows2012
 
     - name: Windows preparation 2016
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/2016_ad_preparation.ps1
-        - powershell_vars: powershell/my_vars.json
+        - script: powershell/2016_ad_preparation.ps1
+        - script_vars: powershell/my_vars.json
         - system:
           - windows2016
 
     - name: Reboot
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/reboot.ps1
+        - script: powershell/reboot.ps1
 
     - name: Allow Windows to come back online
       task: wait
       duration: 30
 
     - name: Windows setup step 1 2012
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/2012_ad_setup_step1.ps1
-        - powershell_vars: powershell/my_vars.json
+        - script: powershell/2012_ad_setup_step1.ps1
+        - script_vars: powershell/my_vars.json
         - system:
           - windows2012
 
     - name: Windows setup step 1 2016
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/2016_ad_setup_step1.ps1
-        - powershell_vars: powershell/my_vars.json
+        - script: powershell/2016_ad_setup_step1.ps1
+        - script_vars: powershell/my_vars.json
         - system:
           - windows2016
 
@@ -63,25 +63,25 @@ group:
       duration: 600
 
     - name: Windows setup step 2 2012
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/2012_ad_setup_step2.ps1
-        - powershell_vars: powershell/my_vars.json
+        - script: powershell/2012_ad_setup_step2.ps1
+        - script_vars: powershell/my_vars.json
         - system:
           - windows2012
 
     - name: Windows setup step 2 2016
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/2016_ad_setup_step2.ps1
-        - powershell_vars: powershell/my_vars.json
+        - script: powershell/2016_ad_setup_step2.ps1
+        - script_vars: powershell/my_vars.json
         - system:
           - windows2016
 
     - name: Reboot
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/reboot.ps1
+        - script: powershell/reboot.ps1
 
     - name: Allow Windows to come back online
       task: wait

@@ -17,15 +17,15 @@ group:
       task: provision
 
     - name: Disable UAC
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/set_uac.ps1
-        - powershell_vars: "-uacValue 0"
+        - script: powershell/set_uac.ps1
+        - script_vars: "-uacValue 0"
 
     - name: Reboot Windows for UAC changes to take effect
-      task: winsetup
+      task: configure
       args:
-        - powershell: powershell/reboot.ps1
+        - script: powershell/reboot.ps1
 
     - name: show Windows info
       task: show
