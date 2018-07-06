@@ -10,4 +10,5 @@ resources:
   network: 
   keypair: 
   ssh_private_key: 
-  administrator_password: 
+  administrator_password:
+  provision_attempts:
